@@ -61,22 +61,16 @@ class SecureRandom {
 	 * @author Koen Punt
 	 */
 	public static function random_bytes($n=16){
-		$random_bytes = static::openssl_random_pseudo_bytes($n);
-
-		if($random_bytes === false){
-			return trigger_error("No suitable random device", E_USER_ERROR);
+		if(function_exists('random_bytes')){
+			return random_bytes($n);
 		}
-		return $random_bytes;
-	}
 
-	// @codeCoverageIgnoreStart
-	protected static function openssl_random_pseudo_bytes($n){
 		if(function_exists('openssl_random_pseudo_bytes')){
 			return openssl_random_pseudo_bytes($n);
 		}
-		return false;
+
+		trigger_error('No suitable random device', E_USER_ERROR);
 	}
-	// @codeCoverageIgnoreEnd
 
 	/**
 	 * SecureRandom::hex generates a random hex string.
@@ -157,7 +151,7 @@ class SecureRandom {
 	 * See RFC 3548 for the definition of URL-safe base64.
 	 *
 	 * @param string $n
-	 * @param string $padding
+	 * @param bool|string $padding
 	 * @return string
 	 * @author Koen Punt
 	 */
@@ -189,7 +183,7 @@ class SecureRandom {
 	 *   echo SecureRandom::random_number(); //=> 0.350621695741409
 	 *
 	 * @param string $n
-	 * @return float
+	 * @return float|integer
 	 * @author Koen Punt
 	 */
 	public static function random_number($n=0){
@@ -212,7 +206,7 @@ class SecureRandom {
 	 *
 	 * See RFC 4122 for details of UUID.
 	 *
-	 * @return void
+	 * @return string
 	 * @author Koen Punt
 	 */
 	public static function uuid(){

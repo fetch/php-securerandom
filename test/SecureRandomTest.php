@@ -2,13 +2,6 @@
 
 use PhpSecureRandom\SecureRandom;
 
-class NoRandomSecureRandom extends SecureRandom {
-	
-	protected static function openssl_random_pseudo_bytes($len){
-		return false;
-	}
-}
-
 class SecureRandomTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @covers PhpSecureRandom\SecureRandom::random_bytes
@@ -16,12 +9,6 @@ class SecureRandomTest extends PHPUnit_Framework_TestCase {
 	public function testRandom_bytes(){
 		for($i = 1; $i < 100; $i++){
 			$this->assertRegExp('/^[\x00-\xff]{' . $i . '}$/', SecureRandom::random_bytes($i));
-		}
-		try{
-			$this->assertFalse(NoRandomSecureRandom::random_bytes(10));
-			$this->fail('Should trigger error');
-		}catch(Exception $e){
-			$this->assertEquals('No suitable random device', $e->getMessage());
 		}
 	}
 
