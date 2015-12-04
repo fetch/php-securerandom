@@ -7,6 +7,10 @@ php:
   - 7.0
   - hhvm
 install:
-  - composer install --dev
+  - composer update --prefer-source
 script:
   - vendor/bin/phpunit
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
